@@ -4,6 +4,8 @@
 
 #include "CoreMinimal.h"
 #include "Components/ActorComponent.h"
+#include "Math/UnrealMathUtility.h"
+#include "Engine/TriggerVolume.h"
 #include "OpenDoor.generated.h"
 
 
@@ -24,5 +26,45 @@ public:
 	// Called every frame
 	virtual void TickComponent(float DeltaTime, ELevelTick TickType, FActorComponentTickFunction* ThisTickFunction) override;
 
-		
+private:
+
+	float InitialYaw;
+	float CurrentYaw;
+	float TargetClosedYaw;
+
+	float TimeLastOpened;
+
+	// Tracks whether the sound has been played
+	bool OpenDoorSoundUsed = false;
+	bool CloseDoorSoundUsed = true;
+
+	UPROPERTY(EditAnywhere);
+	float OpenAngle = 90.f;
+
+	UPROPERTY(EditAnywhere);
+	float DoorOpenSpeed = 2.f;
+
+	UPROPERTY(EditAnywhere);
+	float DoorCloseSpeed = 10.f;
+
+	UPROPERTY(EditAnywhere);
+	float DoorCloseDelay = 2.f;
+
+	UPROPERTY(EditAnywhere);
+	float TotalMassToTrigger = 50.f;
+
+	UPROPERTY(EditAnywhere);
+	ATriggerVolume* PressurePlate = nullptr;
+
+	UPROPERTY(EditAnywhere);
+	UAudioComponent* AudioComponent = nullptr;
+
+	void OpenDoor(float DeltaTime);
+	void CloseDoor(float DeltaTime);
+
+	float GetTotalMassOfActors() const;
+
+	void FindAudioComponent();
+
+	void CheckPressurePlateExists() const;
 };
