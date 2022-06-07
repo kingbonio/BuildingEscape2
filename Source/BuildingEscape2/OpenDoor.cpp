@@ -1,9 +1,9 @@
 // Fill out your copyright notice in the Description page of Project Settings.
 
+#include "OpenDoor.h"
 #include "Components/AudioComponent.h"
 #include "Components/PrimitiveComponent.h"
 #include "Engine/World.h"
-#include "OpenDoor.h"
 #include "GameFramework/Actor.h"
 #include "Math/UnrealMathUtility.h"
 #include "GameFramework/PlayerController.h"
@@ -63,10 +63,11 @@ void UOpenDoor::TickComponent(float DeltaTime, ELevelTick TickType, FActorCompon
 
 	float TotalMassOfActors = GetTotalMassOfActors();
 
+	// UE_LOG(LogTemp, Error, TEXT("Opening Door with mass %i"), TotalMassOfActors);
+	// UE_LOG(LogTemp, Error, TEXT("Total Opening Door Mass %i"), TotalMassToTrigger);
+
 	if (TotalMassOfActors > TotalMassToTrigger)
 	{
-		UE_LOG(LogTemp, Error, TEXT("Opening Door with mass %i"), TotalMassOfActors);
-		UE_LOG(LogTemp, Error, TEXT("Total Opening Door Mass %i"), TotalMassToTrigger);
 		OpenDoor(DeltaTime);
 
 		// Set time last opened
@@ -131,16 +132,34 @@ float UOpenDoor::GetTotalMassOfActors() const
 
 		UPrimitiveComponent* Component = Actor->FindComponentByClass<UPrimitiveComponent>();
 
-		float Mass = Component->GetMass();
+		// FString Description = Component->GetDesc();
+		// FString FullName = Component->GetFullName();
+		// float CalculatedMass = Component->CalculateMass();
+		// float MassScale = Component->GetMassScale();
+
+		// float Mass = Component->GetMass();
 
 		FString Name = Actor->GetName();
 
-		UE_LOG(LogTemp, Error, TEXT("Adding Actor's Mass: %i"), Mass);
-		UE_LOG(LogTemp, Error, TEXT("Adding Actor's Name: %s"), *Name);
-		TotalMass += Actor->FindComponentByClass<UPrimitiveComponent>()->GetMass();
+		if (Name.Contains("DefaultPawn_Blueprint"))
+		{
+			TotalMass += 80;
+		}
+		else
+		{
+			TotalMass += 25;
+		}
+
+		// UE_LOG(LogTemp, Error, TEXT("Adding Actor's Mass: %i"), Mass);
+		// UE_LOG(LogTemp, Error, TEXT("Adding Actor's Name: %s"), *Name);
+		// UE_LOG(LogTemp, Error, TEXT("Adding Actor's Description: %s"), *Description);
+		// UE_LOG(LogTemp, Error, TEXT("Adding Actor's Full name: %s"), *FullName);
+		// UE_LOG(LogTemp, Error, TEXT("Adding Actor's Calculated Mass: %i"), CalculatedMass);
+		// UE_LOG(LogTemp, Error, TEXT("Adding Actor's Mass Scale: %i"), MassScale);
+		// TotalMass += Actor->FindComponentByClass<UPrimitiveComponent>()->GetMass();
 	}
 
-	UE_LOG(LogTemp, Error, TEXT("Total Mass of items: %i"), TotalMass);
+	// UE_LOG(LogTemp, Error, TEXT("Total Mass of items: %i"), TotalMass);
 
 	return TotalMass;
 }

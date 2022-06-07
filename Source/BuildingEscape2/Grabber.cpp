@@ -52,7 +52,7 @@ void UGrabber::SetupInputComponent()
 
 void UGrabber::Grab()
 {
-
+	UE_LOG(LogTemp, Error, TEXT("Grabbing"));
 	FHitResult HitResult = GetFirstPhysicsBodyInReach();
 
 	AActor* ActorHit = HitResult.GetActor();
@@ -94,6 +94,22 @@ FVector UGrabber::GetPlayersReach() const
 	return PlayerViewPointLocation + PlayerViewPointRotation.Vector() * Reach;
 }
 
+FVector UGrabber::GetPlayersHoldingDistance() const
+{
+	FVector PlayerViewPointLocation;
+	FRotator PlayerViewPointRotation;
+
+	// Get player viewpoint
+	GetWorld()->GetFirstPlayerController()->GetPlayerViewPoint(
+		OUT PlayerViewPointLocation,
+		OUT PlayerViewPointRotation
+	);
+
+	PlayerViewPointLocation.Z += HoldHeightAdjustment;
+
+	return PlayerViewPointLocation + PlayerViewPointRotation.Vector() * HoldDistance;
+}
+
 // Called every frame
 void UGrabber::TickComponent(float DeltaTime, ELevelTick TickType, FActorComponentTickFunction* ThisTickFunction)
 {
@@ -104,7 +120,7 @@ void UGrabber::TickComponent(float DeltaTime, ELevelTick TickType, FActorCompone
 	// Apply the physics handle to the reach of the player
 	if (PhysicsHandle->GrabbedComponent)
 	{
-		PhysicsHandle->SetTargetLocation(GetPlayersReach());
+		PhysicsHandle->SetTargetLocation(GetPlayersHoldingDistance());
 	}
 }
 

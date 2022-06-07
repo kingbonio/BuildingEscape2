@@ -26,8 +26,14 @@ protected:
 
 private:
 
-	UPROPERTY(EditAnywhere);
-	float Reach = 200.f;
+	UPROPERTY(EditAnywhere)
+	float Reach = 300.f;
+
+	UPROPERTY(EditAnywhere)
+	float HoldDistance = 200.f;
+
+	UPROPERTY(EditAnywhere)
+	float HoldHeightAdjustment = 80.f;
 
 	UPROPERTY()
 	UPhysicsHandleComponent* PhysicsHandle = nullptr;
@@ -43,8 +49,11 @@ private:
 	// Return first actor within reach with a physics body
 	FHitResult GetFirstPhysicsBodyInReach() const;
 
-	// Return the Line Trace End
+	// Return the reaching Line Trace End
 	FVector GetPlayersReach() const;
+
+	// Return the holding Line Trace End
+	FVector GetPlayersHoldingDistance() const;
 
 	// Get player's position in the world
 	FVector GetPlayersWorldPosition() const;		
